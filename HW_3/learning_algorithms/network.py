@@ -11,7 +11,6 @@
 import random
 import numpy as np
 
-
 #### Вспомогательные функции
 def sigmoid(z):
     """

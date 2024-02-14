@@ -26,13 +26,13 @@ class World(metaclass=ABCMeta):
 
 
 class SimpleCarWorld(World):
-    COLLISION_PENALTY =  # выберите сами
-    HEADING_REWARD =  # выберите сами
-    WRONG_HEADING_PENALTY =  # выберите сами
-    IDLENESS_PENALTY =  # выберите сами
-    SPEEDING_PENALTY =  # выберите сами
-    MIN_SPEED =  # выберите сами
-    MAX_SPEED =  # выберите сами
+    COLLISION_PENALTY = 0 * 0.2 * 1e-1 # выберите сами
+    HEADING_REWARD = 0 * -1 * 1e1 # выберите сами
+    WRONG_HEADING_PENALTY = 0 * 1e1 # выберите сами
+    IDLENESS_PENALTY = 52 * 1e-1 # выберите сами
+    SPEEDING_PENALTY = 31 * 1e-1 # выберите сами
+    MIN_SPEED = 0.8 * 1e0 # выберите сами
+    MAX_SPEED = 2.77 * 1e0  # выберите сами
 
     size = (800, 600)
 
@@ -105,14 +105,14 @@ class SimpleCarWorld(World):
         :return reward: награду агента (возможно, отрицательную)
         """
         a = np.sin(angle(-state.position, state.heading))
-        heading_reward = 1 if a > 0.1 else a if a > 0 else 0
-        heading_penalty = a if a <= 0 else 0
+        heading_reward = 1 if a >0.1 else a if a > 0 else 0
+        heading_penalty = -1 if a <= 0 else 0
         idle_penalty = 0 if abs(state.velocity) > self.MIN_SPEED else -self.IDLENESS_PENALTY
         speeding_penalty = 0 if abs(state.velocity) < self.MAX_SPEED else -self.SPEEDING_PENALTY * abs(state.velocity)
         collision_penalty = - max(abs(state.velocity), 0.1) * int(collision) * self.COLLISION_PENALTY
 
-        return heading_reward * self.HEADING_REWARD + heading_penalty * self.WRONG_HEADING_PENALTY + collision_penalty \
-               + idle_penalty + speeding_penalty
+        return (heading_reward * self.HEADING_REWARD + heading_penalty * self.WRONG_HEADING_PENALTY + collision_penalty 
+               + idle_penalty + speeding_penalty)
 
     def eval_reward(self, state, collision):
         """
